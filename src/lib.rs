@@ -7,7 +7,6 @@
 // The maximum number of bytes that can be read from any given
 // *sysfs* attribute. Generally there should be nothing larger than this.
 
-use std::fmt;
 use std::fs::OpenOptions;
 use std::io::{ErrorKind, Read as _, Write as _};
 
@@ -74,70 +73,4 @@ pub fn sysfs_write(file_path: &str, value: impl AsRef<str>) -> Result<()> {
                 SysfsError::from(e)
             }
         })
-}
-
-/// UNSAFE: Path templates to `sysfs` attributes are expected to be hard-coded
-/// and validated before end-user runtime.
-#[macro_export]
-macro_rules! impl_sysfs_attrs {
-    () => {};
-    // Read-only
-    (
-        $(#[$attr_meta:meta])*
-        $vis:vis sysfs_attr $attr_name:ident ($($arg_ident:ident : $arg_ty:ty),*)
-        in $sysfs_dir:literal {
-            $(#[$read_meta:meta])*
-            read: $parse_ok:expr => $read_ty:ty,
-        }
-
-        $($tail:tt)*
-    ) => {
-        $(#[$attr_meta])*
-        #[doc = ""]
-        $(#[$read_meta])*
-        $vis fn $attr_name ($($arg_ident : $arg_ty),*) -> $crate::Result<$read_ty> {
-            let file_path = format!("{}/{}", format_args!($sysfs_dir), stringify!($attr_name));
-            unsafe {
-                $crate::sysfs_read::< $read_ty >(&file_path, $parse_ok)
-            }
-        }
-
-        $crate::impl_sysfs_attrs! { $($tail)* }
-    };
-    // Read-write
-    (
-        $(#[$attr_meta:meta])*
-        $vis:vis sysfs_attr $attr_name:ident ($($arg_ident:ident : $arg_ty:ty),*)
-        in $sysfs_dir:literal {
-            $(#[$read_meta:meta])*
-            read: $parse_ok:expr => $read_ty:ty,
-            $(#[$write_meta:meta])*
-            write: | $val_ident:ident : $val_ty:ty | -> $fmt_args:expr,
-        }
-
-        $($tail:tt)*
-    ) => {
-        // Getter
-        $crate::impl_sysfs_attrs! {
-            $(#[$attr_meta])*
-            $vis sysfs_attr $attr_name ($($arg_ident : $arg_ty),*)
-            in $sysfs_dir {
-                $(#[$read_meta])*
-                read: $parse_ok => $read_ty,
-            }
-        }
-
-        // Setter
-        $crate::paste! {
-            $(#[$attr_meta])*
-            #[doc = ""]
-            $(#[$write_meta])*
-            $vis fn [< set_ $attr_name >] ($($arg_ident: $arg_ty,)* $val_ident: $val_ty) -> $crate::Result<()> {
-                let file_path = format!("{}/{}", format_args!($sysfs_dir), stringify!($attr_name));
-                $crate::sysfs_write(&file_path, $fmt_args)
-            }
-        }
-
-        $crate::impl_sysfs_attrs! { $($tail)* }
-    };
 }
