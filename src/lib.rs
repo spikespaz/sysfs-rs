@@ -57,16 +57,16 @@ pub unsafe fn sysfs_read<T>(file_path: &str, parse_ok: fn(&str) -> T) -> Result<
     }
 }
 
-/// This is a low-level function which opens a file and writes
-/// [`std::fmt::Arguments`] and wraps error handling. It does not validate, so
-/// ensure that your input is appropriate for the *sysfs* attribute in question.
-pub fn sysfs_write(file_path: &str, fmt_args: fmt::Arguments<'_>) -> Result<()> {
+/// This is a low-level function which opens a file only if it already exists,
+/// writes a string, and wraps error handling. It does not validate, so ensure
+/// that your input is appropriate for the *sysfs* attribute in question.
+pub fn sysfs_write(file_path: &str, value: impl AsRef<str>) -> Result<()> {
     OpenOptions::new()
         .read(false)
         .write(true)
         .create(false)
         .open(file_path)
-        .and_then(|mut f| f.write_fmt(fmt_args))
+        .and_then(|mut f| write!(f, "{}", value.as_ref()))
         .map_err(|e| {
             if e.kind() == ErrorKind::NotFound {
                 SysfsError::MissingAttribute
