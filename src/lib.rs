@@ -44,7 +44,7 @@ pub unsafe fn sysfs_read<T>(file_path: &str, parse_ok: fn(&str) -> T) -> Result<
             let bytes_read = f.read(&mut buf)?;
             // SAFETY: Linux guarantees that all of *sysfs* is valid ASCII.
             let buf = unsafe { std::str::from_utf8_unchecked(&buf[..bytes_read]) };
-            let buf = buf.trim_end_matches('\n');
+            let buf = buf.trim_end();
             Ok(buf)
         });
 
