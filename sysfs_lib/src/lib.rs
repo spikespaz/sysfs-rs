@@ -10,9 +10,6 @@
 use std::fs::OpenOptions;
 use std::io::{ErrorKind, Read as _, Write as _};
 
-#[doc(hidden)]
-pub use paste::paste;
-
 pub type Result<T> = std::result::Result<T, SysfsError>;
 
 #[derive(Debug, thiserror::Error)]
