@@ -28,10 +28,19 @@ pub enum SysfsError {
 
 pub const SYSFS_MAX_ATTR_BYTES: usize = 1024;
 
-/// UNSAFE: This function assumes makes an assumption that the contents of
-/// the file at `file_path` is valid UTF-8 (in fact, it is expected to be
-/// ASCII). It is undefined behavior to use this function with file paths not
-/// exposed through *sysfs*.
+/// # Safety
+///
+/// This function makes an assumption that the contents of the file at
+/// `file_path` is valid UTF-8 (in fact, it is *expected* to be ASCII).
+///
+/// This function is only safe if you are using Linux and have provided a
+/// correct path to the attribute in *sysfs*. No validation is performed.
+///
+/// The function that you pass for `parse_ok` will also likely require usage of
+/// `.unwrap()` when parsing the file content as an attribute value.
+///
+/// It is undefined behavior to use this function with file paths not exposed
+/// through *sysfs*.
 pub unsafe fn sysfs_read<T>(file_path: &str, parse_ok: fn(&str) -> T) -> Result<T> {
     let mut buf = [0; SYSFS_MAX_ATTR_BYTES];
     let result = OpenOptions::new()
