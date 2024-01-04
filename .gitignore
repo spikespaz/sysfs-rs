@@ -1,0 +1,8 @@
+# Rust
+/target
+
+# Rust Library
+Cargo.lock
+
+# Project
+/scratch.rs
