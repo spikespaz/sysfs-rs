@@ -1,5 +1,5 @@
 [workspace]
-members = ["sysfs_api", "sysfs_lib", "sysfs_macros"]
+members = ["sysfs_lib", "sysfs_macros"]
 
 [package]
 name = "sysfs"
@@ -7,5 +7,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-sysfs_api = { path = "./sysfs_api" }
 sysfs_lib = { path = "./sysfs_lib" }
+sysfs_macros = { path = "./sysfs_macros" }

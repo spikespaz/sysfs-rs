@@ -1,6 +1,5 @@
 //! <https://www.kernel.org/doc/html/latest/admin-guide/pm/cpufreq.html?highlight=schedutil#policy-interface-in-sysfs>
-use sysfs_lib::Result;
-use sysfs_macros::sysfs_attrs;
+use crate::lib::{sysfs_attrs, Result};
 
 pub fn num_cpus() -> Result<usize> {
     std::fs::read_dir("/sys/devices/system/cpu/cpufreq")?.try_fold(0, |acc, res| match (acc, res) {
@@ -22,7 +21,7 @@ pub fn num_cpus() -> Result<usize> {
 /// <https://www.kernel.org/doc/html/latest/admin-guide/pm/cpufreq.html#policy-interface-in-sysfs>
 #[sysfs_attrs(in "/sys/devices/system/cpu/cpufreq/policy{cpu}")]
 pub mod cpufreq {
-    use sysfs_macros::sysfs;
+    use crate::lib::sysfs;
 
     /// List of online CPUs belonging to this policy (i.e. sharing the
     /// hardware performance scaling interface represented by the policyX
@@ -206,7 +205,7 @@ pub mod cpufreq {
 // prefix.
 #[sysfs_attrs(in "/sys/devices/system/cpu/cpufreq/policy{cpu}")]
 pub mod amd_pstate {
-    use sysfs_macros::sysfs;
+    use crate::lib::sysfs;
 
     /// Maximum CPPC performance and CPU frequency that the driver is allowed to
     /// set, in percent of the maximum supported CPPC performance level (the
@@ -267,7 +266,7 @@ pub mod amd_pstate {
 /// <https://www.kernel.org/doc/html/latest/admin-guide/acpi/cppc_sysfs.html>
 #[sysfs_attrs(in "/sys/devices/system/cpu/cpu{cpu}")]
 pub mod acpi_cppc {
-    use sysfs_macros::sysfs;
+    use crate::lib::sysfs;
 
     /// Highest performance of this processor (abstract scale).
     #[sysfs]
