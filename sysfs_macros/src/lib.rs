@@ -1,7 +1,4 @@
-#![allow(dead_code)]
 #![allow(clippy::unit_arg)]
-
-mod patterns;
 
 use proc_macro::TokenStream as TokenStream1;
 use proc_macro2::TokenStream as TokenStream2;
