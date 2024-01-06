@@ -5,4 +5,5 @@ pub mod lib {
 
 pub mod api {
     pub mod cpu;
+    pub mod psu;
 }
