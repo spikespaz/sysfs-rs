@@ -303,14 +303,20 @@ pub mod acpi_cppc {
         ..
     }
 
-    /// CPU frequency corresponding to nominal_perf (in MHz). The above frequencies should only be used to report processor performance in frequency instead of abstract scale. These values should not be used for any functional decisions.
+    /// CPU frequency corresponding to nominal_perf (in MHz). The above
+    /// frequencies should only be used to report processor performance in
+    /// frequency instead of abstract scale. These values should not be used
+    /// for any functional decisions.
     #[sysfs]
     pub fn nominal_freq(cpu: usize) -> usize {
         let read = |text: &str| text.parse().unwrap();
         ..
     }
 
-    /// Includes both Reference and delivered performance counter. Reference counter ticks up proportional to processor's reference performance. Delivered counter ticks up proportional to processor's delivered performance.
+    /// Includes both Reference and delivered performance counter. Reference
+    /// counter ticks up proportional to processor's reference performance.
+    /// Delivered counter ticks up proportional to processor's delivered
+    /// performance.
     #[sysfs]
     pub fn feedback_ctrs(cpu: usize) -> usize {
         let read = |text: &str| text.parse().unwrap();
@@ -324,7 +330,8 @@ pub mod acpi_cppc {
         ..
     }
 
-    /// Performance level at which reference performance counter accumulates (abstract scale).
+    /// Performance level at which reference performance counter accumulates
+    /// (abstract scale).
     #[sysfs]
     pub fn reference_perf(cpu: usize) -> usize {
         let read = |text: &str| text.parse().unwrap();
