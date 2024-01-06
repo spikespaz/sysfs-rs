@@ -1,4 +1,13 @@
-use crate::lib::sysfs_attrs;
+use crate::lib::{sysfs_attrs, Result};
+
+pub fn list_power_supplies() -> Result<Vec<String>> {
+    std::fs::read_dir("/sys/class/power_supply")?
+        .map(|res| {
+            res.map(|inode| inode.file_name().to_string_lossy().to_string())
+                .map_err(Into::into)
+        })
+        .collect()
+}
 
 /// <https://www.kernel.org/doc/html/latest/power/power_supply_class.html>
 /// <https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-power>
