@@ -164,7 +164,7 @@ pub mod cpufreq {
     #[sysfs]
     pub fn scaling_max_freq(cpu: usize) -> usize {
         let read = |text: &str| text.parse().unwrap();
-        let write = |freq: usize| format!("{freq}");
+        let write = |khz: usize| khz.to_string();
         ..
     }
 
@@ -177,7 +177,7 @@ pub mod cpufreq {
     #[sysfs]
     pub fn scaling_min_freq(cpu: usize) -> usize {
         let read = |text: &str| text.parse().unwrap();
-        let write = |freq: usize| format!("{freq}");
+        let write = |khz: usize| khz.to_string();
         ..
     }
 
@@ -189,7 +189,7 @@ pub mod cpufreq {
     #[sysfs]
     pub fn scaling_setspeed(cpu: usize) -> usize {
         let read = |text: &str| text.parse().unwrap();
-        let write = |freq: usize| format!("{freq}");
+        let write = |khz: usize| khz.to_string();
         ..
     }
 }
