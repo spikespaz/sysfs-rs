@@ -13,6 +13,8 @@ pub fn list_power_supplies() -> Result<Vec<String>> {
 /// <https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-power>
 #[sysfs_attrs(in "/sys/class/power_supply/{psu}")]
 pub mod power_supply {
+    use strum::{EnumString, FromRepr, IntoStaticStr};
+
     use crate::lib::sysfs;
 
     /// Reports the name of the device manufacturer.
@@ -360,9 +362,25 @@ pub mod power_supply {
     ///
     /// Valid values: "Unknown", "Critical", "Low", "Normal", "High", "Full"
     #[sysfs]
-    pub fn capacity_level(psu: &str) -> String {
-        let read = str::to_owned;
+    pub fn capacity_level(psu: &str) -> CapacityLevel {
+        let read = |text: &str| text.parse().unwrap();
         ..
+    }
+
+    #[derive(Clone, Copy, Debug, IntoStaticStr, EnumString)]
+    pub enum CapacityLevel {
+        #[strum(serialize = "Unknown")]
+        Unknown,
+        #[strum(serialize = "Critical")]
+        Critical,
+        #[strum(serialize = "Low")]
+        Low,
+        #[strum(serialize = "Normal")]
+        Normal,
+        #[strum(serialize = "High")]
+        High,
+        #[strum(serialize = "Full")]
+        Full,
     }
 
     /// Maximum allowable charging current. Used for charge rate
@@ -435,10 +453,32 @@ pub mod power_supply {
     /// "Unknown", "N/A", "Trickle", "Fast", "Standard",
     /// "Adaptive", "Custom", "Long Life", "Bypass"
     #[sysfs]
-    pub fn charge_type(psu: &str) -> String {
-        let read = str::to_owned;
-        let write = |charge_type: &str| charge_type.to_owned();
+    pub fn charge_type(psu: &str) -> ChargeType {
+        let read = |text: &str| text.parse().unwrap();
+        let write = |charge_type: ChargeType| <&'static str>::from(charge_type).to_owned();
         ..
+    }
+
+    #[derive(Copy, Clone, Debug, EnumString, IntoStaticStr)]
+    pub enum ChargeType {
+        #[strum(serialize = "Unknown")]
+        Unknown,
+        #[strum(serialize = "N/A")]
+        NotAvailable,
+        #[strum(serialize = "Trickle")]
+        Trickle,
+        #[strum(serialize = "Fast")]
+        Fast,
+        #[strum(serialize = "Standard")]
+        Standard,
+        #[strum(serialize = "Adaptive")]
+        Adaptive,
+        #[strum(serialize = "Custom")]
+        Custom,
+        #[strum(serialize = "Long Life")]
+        LongLife,
+        #[strum(serialize = "Bypass")]
+        Bypass,
     }
 
     /// Reports the charging current value which is used to determine
@@ -465,9 +505,43 @@ pub mod power_supply {
     /// "Over current", "Calibration required", "Warm",
     /// "Cool", "Hot", "No battery"
     #[sysfs]
-    pub fn health(psu: &str) -> String {
-        let read = str::to_owned;
+    pub fn health(psu: &str) -> Health {
+        let read = |text: &str| text.parse().unwrap();
         ..
+    }
+
+    #[derive(Copy, Clone, Debug, EnumString, IntoStaticStr)]
+    pub enum Health {
+        #[strum(serialize = "Unknown")]
+        Unknown,
+        #[strum(serialize = "Good")]
+        Good,
+        #[strum(serialize = "Overheat")]
+        Overheat,
+        #[strum(serialize = "Dead")]
+        Dead,
+        #[strum(serialize = "Over voltage")]
+        OverVoltage,
+        #[strum(serialize = "Unspecified failure")]
+        UnspecifiedFailure,
+        #[strum(serialize = "cold")]
+        Cold,
+        #[strum(serialize = "Watchdog timer expire")]
+        WatchdogTimerExpire,
+        #[strum(serialize = "Safety timer expire")]
+        SafetyTimerExpire,
+        #[strum(serialize = "Over current")]
+        OverCurrent,
+        #[strum(serialize = "Calibration required")]
+        CalibrationRequired,
+        #[strum(serialize = "Warm")]
+        Warm,
+        #[strum(serialize = "Cool")]
+        Cool,
+        #[strum(serialize = "Hot")]
+        Hot,
+        #[strum(serialize = "No battery")]
+        NoBattery,
     }
 
     /// Reports the charging current applied during pre-charging phase
@@ -503,9 +577,23 @@ pub mod power_supply {
     /// Valid values:
     /// "Unknown", "Charging", "Discharging", "Not charging", "Full"
     #[sysfs]
-    pub fn status(psu: &str) -> String {
-        let read = str::to_owned;
+    pub fn status(psu: &str) -> Status {
+        let read = |text: &str| text.parse().unwrap();
         ..
+    }
+
+    #[derive(Copy, Clone, Debug, EnumString, IntoStaticStr)]
+    pub enum Status {
+        #[strum(serialize = "Unknown")]
+        Unknown,
+        #[strum(serialize = "Charging")]
+        Charging,
+        #[strum(serialize = "Discharging")]
+        Discharging,
+        #[strum(serialize = "Not charging")]
+        NotCharging,
+        #[strum(serialize = "Full")]
+        Full,
     }
 
     /// Represents the charging behaviour.
@@ -520,9 +608,17 @@ pub mod power_supply {
     /// | `inhibit-charge`  | Do not charge while AC is attached       |
     /// | `force-discharge` | Force discharge while AC is attached     |
     #[sysfs]
-    pub fn charge_behaviour(psu: &str) -> String {
-        let read = str::to_owned;
+    pub fn charge_behaviour(psu: &str) -> ChargeBehaviour {
+        let read = |text: &str| text.parse().unwrap();
         ..
+    }
+
+    #[derive(Copy, Clone, Debug, EnumString, IntoStaticStr)]
+    #[strum(serialize_all = "kebab-case")]
+    pub enum ChargeBehaviour {
+        Auto,
+        InhibitCharge,
+        ForceDischarge,
     }
 
     /// Describes the battery technology supported by the supply.
@@ -532,9 +628,25 @@ pub mod power_supply {
     /// Valid values:
     /// "Unknown", "NiMH", "Li-ion", "Li-poly", "LiFe", "NiCd", "LiMn"
     #[sysfs]
-    pub fn technology(psu: &str) -> String {
-        let read = str::to_owned;
+    pub fn technology(psu: &str) -> Technology {
+        let read = |text: &str| text.parse().unwrap();
         ..
+    }
+
+    #[derive(Copy, Clone, Debug, EnumString, IntoStaticStr)]
+    pub enum Technology {
+        #[strum(serialize = "Unknown")]
+        Unknown,
+        #[strum(serialize = "NiMH")]
+        NiMh,
+        #[strum(serialize = "Li-ion")]
+        LiIon,
+        #[strum(serialize = "LiFe")]
+        LiFe,
+        #[strum(serialize = "NiCd")]
+        NiCd,
+        #[strum(serialize = "LiMn")]
+        LiMn,
     }
 
     /// Reports an average VBAT voltage reading for the battery, over a
@@ -634,10 +746,18 @@ pub mod power_supply {
     /// | 1     | Online Fixed           | Fixed Voltage Supply           |
     /// | 2     | Online Programmable    | Programmable Voltage Supply    |
     #[sysfs]
-    pub fn online(psu: &str) -> u8 {
-        let read = |text: &str| text.parse().unwrap();
-        let write = |state: u8| state.to_string();
+    pub fn online(psu: &str) -> Online {
+        let read = |text: &str| Online::from_repr(text.parse::<u8>().unwrap()).unwrap();
+        let write = |state: Online| (state as u8).to_string();
         ..
+    }
+
+    #[derive(Copy, Clone, Debug, FromRepr)]
+    #[repr(u8)]
+    pub enum Online {
+        Offline = 0,
+        Fixed = 1,
+        Programmable = 2,
     }
 
     /// Reports what type of USB connection is currently active for
@@ -653,5 +773,29 @@ pub mod power_supply {
     pub fn usb_type(psu: &str) -> String {
         let read = |text: &str| text.parse().unwrap();
         ..
+    }
+
+    #[derive(Copy, Clone, EnumString, IntoStaticStr)]
+    pub enum UsbType {
+        #[strum(serialize = "Unknown")]
+        Unknown,
+        #[strum(serialize = "SDP")]
+        Sdp,
+        #[strum(serialize = "DCP")]
+        Dcp,
+        #[strum(serialize = "CDP")]
+        Cdp,
+        #[strum(serialize = "ACA")]
+        Aca,
+        #[strum(serialize = "C")]
+        C,
+        #[strum(serialize = "PD")]
+        Pd,
+        #[strum(serialize = "PD_DRP")]
+        PdDrp,
+        #[strum(serialize = "PD_PPS")]
+        PdPps,
+        #[strum(serialize = "BrickID")]
+        BrickId,
     }
 }
