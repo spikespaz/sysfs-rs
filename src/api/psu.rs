@@ -301,7 +301,6 @@ pub mod power_supply {
     #[sysfs]
     pub fn capacity(psu: &str) -> f32 {
         let read = |text: &str| text.parse::<f32>().unwrap() / 100.0;
-        let write = |percent: f32| ((percent * 100.0).round() as u8).to_string();
         ..
     }
 
@@ -579,6 +578,7 @@ pub mod power_supply {
     #[sysfs]
     pub fn status(psu: &str) -> Status {
         let read = |text: &str| text.parse().unwrap();
+        let write = |status: Status| <&'static str>::from(status).to_owned();
         ..
     }
 
