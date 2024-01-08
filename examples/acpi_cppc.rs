@@ -8,7 +8,7 @@ fn main() {
     for cpu in 0..count_cpus().unwrap() {
         print_object!(
             in sysfs::api::cpu::acpi_cppc
-            ["/sys/devices/system/cpu/cpufreq/policy{}", cpu] {
+            ["/sys/devices/system/cpu/cpu{}/acpi_cppc", cpu] {
                 highest_perf,
                 nominal_perf,
                 lowest_nonlinear_perf,

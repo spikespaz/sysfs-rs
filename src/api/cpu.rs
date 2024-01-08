@@ -260,7 +260,7 @@ pub mod amd_pstate {
 }
 
 /// <https://www.kernel.org/doc/html/latest/admin-guide/acpi/cppc_sysfs.html>
-#[sysfs_attrs(in "/sys/devices/system/cpu/cpu{cpu}")]
+#[sysfs_attrs(in "/sys/devices/system/cpu/cpu{cpu}/acpi_cppc")]
 pub mod acpi_cppc {
     use crate::lib::sysfs;
 
