@@ -14,6 +14,7 @@ pub fn list_power_supplies() -> Result<Vec<String>> {
 #[sysfs_attrs(in "/sys/class/power_supply/{psu}")]
 pub mod power_supply {
     use strum::{EnumString, FromRepr, IntoStaticStr};
+    use sysfs_lib::parse_selected;
 
     use crate::lib::sysfs;
 
@@ -623,7 +624,7 @@ pub mod power_supply {
     /// | `force-discharge` | Force discharge while AC is attached     |
     #[sysfs]
     pub fn charge_behaviour(psu: &str) -> ChargeBehaviour {
-        let read = |text: &str| text.parse().unwrap();
+        let read = |text: &str| parse_selected(text).unwrap().parse().unwrap();
         ..
     }
 

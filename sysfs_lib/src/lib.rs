@@ -80,3 +80,8 @@ pub fn sysfs_write(file_path: &str, value: impl AsRef<str>) -> Result<()> {
             }
         })
 }
+
+pub fn parse_selected(text: &str) -> Option<&str> {
+    let (open, close) = (text.find('[')?, text.find(']')?);
+    text.get(open + 1..close)
+}
