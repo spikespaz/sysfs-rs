@@ -1,7 +1,7 @@
 //! <https://www.kernel.org/doc/html/latest/admin-guide/pm/cpufreq.html?highlight=schedutil#policy-interface-in-sysfs>
 use crate::lib::{sysfs_attrs, Result};
 
-pub fn num_cpus() -> Result<usize> {
+pub fn count_cpus() -> Result<usize> {
     use std::fs::DirEntry;
     let is_cpu_obj = |inode: &DirEntry| {
         let name = inode.file_name();
