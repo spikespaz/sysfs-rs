@@ -56,9 +56,23 @@ pub mod power_supply {
     ///
     /// Valid values: "Battery", "UPS", "Mains", "USB", "Wireless"
     #[sysfs]
-    pub fn r#type(psu: &str) -> String {
-        let read = str::to_owned;
+    pub fn r#type(psu: &str) -> Type {
+        let read = |text: &str| text.parse().unwrap();
         ..
+    }
+
+    #[derive(Clone, Copy, Debug, IntoStaticStr, EnumString)]
+    pub enum Type {
+        #[strum(serialize = "Battery")]
+        Battery,
+        #[strum(serialize = "UPS")]
+        Ups,
+        #[strum(serialize = "Mains")]
+        Mains,
+        #[strum(serialize = "USB")]
+        Usb,
+        #[strum(serialize = "Wireless")]
+        Wireless,
     }
 
     /// Battery:
