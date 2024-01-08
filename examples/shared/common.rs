@@ -15,7 +15,7 @@ macro_rules! print_object {
 
         println!($path_fmt, $($path_arg),*);
         for (name, value) in attrs {
-            println!("    {name:<longest$} = {value}")
+            println!("    {name:<longest$} = {value}");
         }
     }};
     (@call_each, [ $($getter:ident),* ], $args:tt) => {
