@@ -770,7 +770,7 @@ pub mod power_supply {
     /// "Unknown", "SDP", "DCP", "CDP", "ACA", "C", "PD",
     /// "PD_DRP", "PD_PPS", "BrickID"
     #[sysfs]
-    pub fn usb_type(psu: &str) -> String {
+    pub fn usb_type(psu: &str) -> UsbType {
         let read = |text: &str| text.parse().unwrap();
         ..
     }
