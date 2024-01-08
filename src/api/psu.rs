@@ -789,7 +789,7 @@ pub mod power_supply {
         ..
     }
 
-    #[derive(Copy, Clone, EnumString, IntoStaticStr)]
+    #[derive(Copy, Clone, Debug, EnumString, IntoStaticStr)]
     pub enum UsbType {
         #[strum(serialize = "Unknown")]
         Unknown,
