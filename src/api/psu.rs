@@ -655,6 +655,8 @@ pub mod power_supply {
         NiMh,
         #[strum(serialize = "Li-ion")]
         LiIon,
+        #[strum(serialize = "Li-poly")]
+        LiPoly,
         #[strum(serialize = "LiFe")]
         LiFe,
         #[strum(serialize = "NiCd")]
