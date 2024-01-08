@@ -12,8 +12,10 @@ macro_rules! print_object {
             ( $($path_arg),* )
         );
         let longest = attrs.iter().max_by_key(|(key, _)| key.len()).map_or(0, |(key, _)| key.len());
+
+        println!($path_fmt, $($path_arg),*);
         for (name, value) in attrs {
-            println!("{name:<longest$} = {value}")
+            println!("    {name:<longest$} = {value}")
         }
     }};
     (@call_each, [ $($getter:ident),* ], $args:tt) => {
