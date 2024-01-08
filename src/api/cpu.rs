@@ -2,20 +2,16 @@
 use crate::lib::{sysfs_attrs, Result};
 
 pub fn num_cpus() -> Result<usize> {
-    std::fs::read_dir("/sys/devices/system/cpu/cpufreq")?.try_fold(0, |acc, res| match (acc, res) {
-        (acc, Ok(inode))
-            if {
-                let name = inode.file_name();
-                let name = name.to_string_lossy();
-                name.starts_with("policy")
-                    && name["policy".len()..].chars().all(|ch| ch.is_ascii_digit())
-            } =>
-        {
-            Ok(acc + 1)
-        }
-        (acc, Ok(_)) => Ok(acc),
-        (_, Err(e)) => Err(e.into()),
-    })
+    use std::fs::DirEntry;
+    let is_cpu_obj = |inode: &DirEntry| {
+        let name = inode.file_name();
+        let name = name.to_string_lossy();
+        name.starts_with("policy") && name["policy".len()..].chars().all(|ch| ch.is_ascii_digit())
+    };
+    let count = std::fs::read_dir("/sys/devices/system/cpu/cpufreq")?
+        .filter(|res| matches!(res, Ok(inode) if is_cpu_obj(inode)))
+        .count();
+    Ok(count)
 }
 
 /// <https://www.kernel.org/doc/html/latest/admin-guide/pm/cpufreq.html#policy-interface-in-sysfs>
