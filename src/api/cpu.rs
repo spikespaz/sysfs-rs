@@ -314,9 +314,39 @@ pub mod acpi_cppc {
     /// Delivered counter ticks up proportional to processor's delivered
     /// performance.
     #[sysfs]
-    pub fn feedback_ctrs(cpu: usize) -> usize {
+    pub fn feedback_ctrs(cpu: usize) -> FeedbackCounters {
         let read = |text: &str| text.parse().unwrap();
         ..
+    }
+
+    #[derive(Copy, Clone, Debug)]
+    pub struct FeedbackCounters {
+        pub reference: usize,
+        pub delivered: usize,
+    }
+
+    impl std::str::FromStr for FeedbackCounters {
+        type Err = crate::Error;
+
+        fn from_str(text: &str) -> crate::Result<Self> {
+            let mut reference = None;
+            let mut delivered = None;
+
+            for text in text.split(' ') {
+                if let Some(text) = text.strip_prefix("ref:") {
+                    reference = Some(text.parse().unwrap());
+                } else if let Some(text) = text.strip_prefix("del:") {
+                    delivered = Some(text.parse().unwrap());
+                } else {
+                    todo!("parsing error")
+                }
+            }
+
+            Ok(Self {
+                reference: reference.unwrap(),
+                delivered: delivered.unwrap(),
+            })
+        }
     }
 
     /// Minimum time for the feedback counters to wraparound (seconds).
