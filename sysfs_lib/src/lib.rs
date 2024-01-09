@@ -10,10 +10,10 @@
 use std::fs::OpenOptions;
 use std::io::{ErrorKind, Read as _, Write as _};
 
-pub type Result<T> = std::result::Result<T, SysfsError>;
+pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug, thiserror::Error)]
-pub enum SysfsError {
+pub enum Error {
     /// Kernel documentation says that if you get os error 2 that
     /// means a feature is unavailable.
     #[error("the requested sysfs attribute does not exist")]
@@ -55,10 +55,10 @@ pub unsafe fn sysfs_read<T>(file_path: &str, parse_ok: fn(&str) -> T) -> Result<
         });
 
     match result {
-        Ok("<unsupported>") => Err(SysfsError::UnsupportedAttribute),
+        Ok("<unsupported>") => Err(Error::UnsupportedAttribute),
         Ok(text) => Ok(parse_ok(text)),
-        Err(e) if e.kind() == ErrorKind::NotFound => Err(SysfsError::MissingAttribute),
-        Err(e) => Err(SysfsError::from(e)),
+        Err(e) if e.kind() == ErrorKind::NotFound => Err(Error::MissingAttribute),
+        Err(e) => Err(Error::from(e)),
     }
 }
 
@@ -74,9 +74,9 @@ pub fn sysfs_write(file_path: &str, value: impl AsRef<str>) -> Result<()> {
         .and_then(|mut f| write!(f, "{}", value.as_ref()))
         .map_err(|e| {
             if e.kind() == ErrorKind::NotFound {
-                SysfsError::MissingAttribute
+                Error::MissingAttribute
             } else {
-                SysfsError::from(e)
+                Error::from(e)
             }
         })
 }
