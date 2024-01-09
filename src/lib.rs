@@ -14,3 +14,5 @@ pub mod api {
 /// If a  consumer module uses more items from `sysfs::lib`,
 /// it modules should `use sysfs::lib::Error`, not `sysfs::Error`.
 pub use lib::Error;
+/// Stylistic: Same rules as `sysfs::Error`.
+pub use lib::Result;
