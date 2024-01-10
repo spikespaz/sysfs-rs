@@ -48,7 +48,7 @@ pub mod power_supply {
     /// Valid values: Represented as string
     #[sysfs]
     pub fn serial_number(psu: &str) -> String {
-        let read = str::to_owned;
+        let read = |text: &str| text.trim().to_owned();
         ..
     }
 
