@@ -62,6 +62,7 @@ struct ItemSysfsAttrFn {
     sig: Signature,
     let_read: Option<Local>,
     let_write: Option<Local>,
+    #[allow(dead_code)]
     dots: Token![..],
     block: Box<Block>,
 }
@@ -376,6 +377,7 @@ struct SetterFunction {
     sig: Signature,
     let_write: Local,
     from_ident: Ident,
+    #[allow(dead_code)]
     from_type: Box<Type>,
     stmts: Vec<Stmt>,
     sysfs_dir: Option<LitStr>,
@@ -553,25 +555,5 @@ impl TryFrom<ItemSysfsAttrFn> for SetterFunction {
             sysfs_dir: None,
             sysfs_file,
         })
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use syn::parse_quote;
-
-    use super::*;
-
-    #[rustfmt::skip]
-    macro_rules! test_parse {
-        ({ $($input:tt)* } => $parse_ty:ty) => {{
-            let result: syn::Result<$parse_ty> = syn::parse_str(&(quote::quote!{
-                $($input)*
-            }).to_string());
-            match result {
-                Ok(_) => (),
-                Err(e) => panic!("{}", e.to_string()),
-            }
-        }};
     }
 }
