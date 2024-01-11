@@ -1,6 +1,3 @@
-[workspace]
-members = ["sysfs_lib", "sysfs_macros"]
-
 [package]
 name = "sysfs"
 version = "0.1.0"
