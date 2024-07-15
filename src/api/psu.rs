@@ -626,6 +626,7 @@ pub mod power_supply {
     #[sysfs]
     pub fn charge_behaviour(psu: &str) -> ChargeBehaviour {
         let read = |text: &str| parse_selected(text).unwrap().parse().unwrap();
+        let write = |behavior: ChargeBehaviour| <&'static str>::from(behavior);
         ..
     }
 
