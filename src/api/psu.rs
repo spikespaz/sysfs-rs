@@ -470,7 +470,7 @@ pub mod power_supply {
     #[sysfs]
     pub fn charge_type(psu: &str) -> ChargeType {
         let read = |text: &str| text.parse().unwrap();
-        let write = |charge_type: ChargeType| <&'static str>::from(charge_type).to_owned();
+        let write = |charge_type: ChargeType| <&'static str>::from(charge_type);
         ..
     }
 
@@ -594,7 +594,7 @@ pub mod power_supply {
     #[sysfs]
     pub fn status(psu: &str) -> Status {
         let read = |text: &str| text.parse().unwrap();
-        let write = |status: Status| <&'static str>::from(status).to_owned();
+        let write = |status: Status| <&'static str>::from(status);
         ..
     }
 
