@@ -1,6 +1,10 @@
 [package]
 name = "sysfs"
-version = "0.1.0"
+version = "0.0.1"
+authors = ["Jacob Birkett <support@birkett.dev>"]
+homepage = "https://github.com/spikespaz/sysfs-rs"
+repository = "https://github.com/spikespaz/sysfs-rs"
+license = "MIT"
 edition = "2021"
 
 [dependencies]
