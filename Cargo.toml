@@ -12,7 +12,7 @@ edition = "2021"
 
 [package]
 name = "sysfs"
-version = "0.0.1"
+version = "0.0.2"
 description.workspace = true
 authors.workspace = true
 homepage.workspace = true
